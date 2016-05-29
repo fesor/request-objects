@@ -1,6 +1,8 @@
 Symfony Request Objects
 ===========================
 
+[![Build Status](https://travis-ci.org/fesor/request-objects.svg?branch=master)](https://travis-ci.org/fesor/request-objects)
+
 **Note**: Please note that this is very unstable solution so be careful with it. And please give your feedback!
 I appreciate it.
 
