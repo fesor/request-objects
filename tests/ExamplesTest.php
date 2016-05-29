@@ -31,10 +31,10 @@ class ExamplesTest extends PHPUnit_Framework_TestCase
         ]);
         $request = $this->requestBinder->bind($requestClassName, $httpRequest);
 
-        $this->assertEquals($request->get('email'), 'user@example.com');
-        $this->assertEquals($request->get('password'), 'example');
-        $this->assertEquals($request->has('first_name'), true);
-        $this->assertEquals($request->has('not-existing'), false);
-        $this->assertEquals($request->get('not-existing', 'default'), 'default');
+        $this->assertEquals('user@example.com', $request->get('email'));
+        $this->assertEquals('example', $request->get('password'));
+        $this->assertEquals(true, $request->has('first_name'));
+        $this->assertEquals(false, $request->has('not-existing'));
+        $this->assertEquals('default', $request->get('not-existing', 'default'));
     }
 }

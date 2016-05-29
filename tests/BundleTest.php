@@ -28,8 +28,8 @@ class BundleTest extends PHPUnit_Framework_TestCase
         ];
         $response = $this->kernel->handle(Request::create('/users', 'POST', $payload));
 
-        $this->assertEquals($response->getStatusCode(), 201);
-        $this->assertEquals(json_decode($response->getContent(), true), $payload);
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals($payload, json_decode($response->getContent(), true));
     }
 
     /**
@@ -57,7 +57,9 @@ class BundleTest extends PHPUnit_Framework_TestCase
         ];
 
         $response = $this->kernel->handle(Request::create('/users_custom', 'POST', $payload));
-        $this->assertEquals($response->getStatusCode(), 400);
-    }
+        $responseBody = json_decode($response->getContent(), true);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertCount(1, $responseBody['errors']);
 
+    }
 }
