@@ -1,0 +1,20 @@
+parameters:
+    locale: en
+    kernel.secret: "example"
+
+framework:
+    test: ~
+    secret: "%kernel.secret%"
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: false
+    router:
+        resource: "%kernel.root_dir%/routing.yml"
+        strict_requirements: ~
+    validation:
+      enabled: true
+
+services:
+  register_user_controller:
+    class: 'Fesor\RequestObject\Examples\RegisterUserController'
