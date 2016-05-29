@@ -26,7 +26,7 @@ and validate it at front-controller level. So why not in Symfony?
 Use composer:
 
 ```
-composer require fesor/request-objects:dev-master@dev
+composer require fesor/request-objects
 ```
 
 And register bundle:
