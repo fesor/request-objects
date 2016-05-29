@@ -20,4 +20,20 @@ class InvalidRequestPayloadException extends \Exception
         $this->requestObject = $requestObject;
         $this->errors = $errors;
     }
+
+    /**
+     * @return ValidationRequiredRequest
+     */
+    public function getRequestObject()
+    {
+        return $this->requestObject;
+    }
+
+    /**
+     * @return ConstraintViolationListInterface
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 }

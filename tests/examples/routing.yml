@@ -1,3 +1,6 @@
 register_user:
     path:      /users
     defaults:  {_controller: 'register_user_controller:registerUserAction'}
+register_user_custom:
+    path:       /users_custom
+    defaults:  {_controller: 'register_user_controller:registerUserCustomAction'}

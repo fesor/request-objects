@@ -32,4 +32,32 @@ class BundleTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(json_decode($response->getContent(), true), $payload);
     }
 
+    /**
+     * @expectedException \Fesor\RequestObject\InvalidRequestPayloadException
+     */
+    function testInvalidRequestData()
+    {
+        $payload = [
+            'email' => 'invalid',
+            'password' => 'example',
+            'first_name' => 'John',
+            'last_name' => 'Doe'
+        ];
+        
+        $this->kernel->handle(Request::create('/users', 'POST', $payload));
+    }
+
+    function testCustomInvalidRequestResponse()
+    {
+        $payload = [
+            'email' => 'invalid',
+            'password' => 'example',
+            'first_name' => 'John',
+            'last_name' => 'Doe'
+        ];
+
+        $response = $this->kernel->handle(Request::create('/users_custom', 'POST', $payload));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
 }

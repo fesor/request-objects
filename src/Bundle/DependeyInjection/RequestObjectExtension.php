@@ -49,6 +49,10 @@ class RequestObjectExtension extends Extension
             'event'  => 'kernel.controller',
             'method' => 'onKernelController'
         ));
+        $definition->addTag('kernel.event_listener', array(
+            'event'  => 'kernel.exception',
+            'method' => 'onKernelException'
+        ));
         
         $container->setDefinition('request_object.event_listener.controller', $definition);
     }

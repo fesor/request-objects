@@ -2,9 +2,12 @@
 
 namespace Fesor\RequestObject\Bundle;
 
+use Fesor\RequestObject\ErrorResponseProvider;
+use Fesor\RequestObject\InvalidRequestPayloadException;
 use Fesor\RequestObject\Request;
 use Fesor\RequestObject\RequestBinder;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 class RequestObjectEventListener
 {
@@ -47,6 +50,25 @@ class RequestObjectEventListener
             $requestObject = $this->requestBinder->bind($className, $request);
             $request->attributes->set($argument->getName(), $requestObject);
         }
+    }
+    
+    public function onKernelException(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
+        if (!$exception instanceof InvalidRequestPayloadException) {
+            return;
+        }
+        
+        $requestObject = $exception->getRequestObject();
+        if (!$requestObject instanceof ErrorResponseProvider) {
+            return;
+        }
+
+        $event->setResponse(
+            $requestObject->getErrorResponse(
+                $exception->getErrors()
+            )
+        );
     }
 
 }

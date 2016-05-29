@@ -37,5 +37,4 @@ class ExamplesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($request->has('not-existing'), false);
         $this->assertEquals($request->get('not-existing', 'default'), 'default');
     }
-
 }
