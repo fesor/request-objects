@@ -60,6 +60,11 @@ class BundleTest extends PHPUnit_Framework_TestCase
         $responseBody = json_decode($response->getContent(), true);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertCount(1, $responseBody['errors']);
+    }
 
+    function testNoCustomRequest()
+    {
+        $response = $this->kernel->handle(Request::create('/no_request', 'POST', []));
+        $this->assertEquals(204, $response->getStatusCode());
     }
 }
