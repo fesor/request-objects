@@ -45,7 +45,7 @@ And that's it!
 
 ## Usage
 
-Just create your request object extended from `Fesor\RequestObject\Request`, defined validation rules:
+Just create your request object extended from `Fesor\RequestObject\Request`, define validation rules:
 
 ```php
 use Fesor\RequestObject\Request;
@@ -64,14 +64,12 @@ class RegisterUserRequest extends Request
 }
 ```
 
-And then we can use it in our controllers:
+And then use it in our controllers:
 
 ```php
 public function registerUserAction(RegisterUserRequest $request)
 {
-    $data = $request->all();
-
-    // do real stuff! Data is valid!
+    // do real stuff! Data is already validated!
 }
 ```
 
@@ -81,7 +79,7 @@ If request data is invalid then exception will be thrown.
 If you want to generate custom error response instead of relying on global error controller, just implement
 `ErrorResponseProvider` interface in your request:
 
-```
+```php
 class ExtendedRegisterUserRequest extends RegisterUserRequest implements ErrorResponseProvider
 {
     public function getErrorResponse(ConstraintViolationListInterface $errors)
