@@ -6,6 +6,8 @@ Symfony Request Objects
 **Note**: Please note that this is very unstable solution so be careful with it. And please give your feedback!
 I appreciate it.
 
+## Why?
+
 Most of Symfony developers uses `symfony/forms` to map request data to some objects.
 This object then validates with `symfony/validation` and system start to work with data.
 
@@ -19,32 +21,31 @@ first failed constraint.
 Spring and Laravel has diffrent implementation of the same ideas: map request data to some object
 and validate it at front-controller level. So why not in Symfony?
 
-## Usage
+## Installation
 
-For example we have simple registration action:
+Use composer:
 
-```php
-public function registerUserAction(Request $request)
-{
-    $data = $request->request->all();
-    $errors = $this->get('validator')->validate($data, new Assert\Collection([
-        'email' => new Assert\Email(['message' => 'Please fill in valid email']),
-        'password' => new Assert\Length(['min' => 4, 'minMessage' => 'Password is to short']),
-        'first_name' => new Assert\NotBlank(['message' => 'Please provide your first name']),
-        'last_name' => new Assert\NotBlank(['message' => 'Please provide your last name'])
-    ]));
-
-    if (0 !== count($errors) {
-        $this->failWithInvalidRequestData($errors);
-    }
-
-    // do real stuff
-}
+```
+composer require fesor/request-objects:dev-master@dev
 ```
 
-This is very annoying... Our controllers became messy, there is possibility of code duplication with
-pretty similar requests over your API. So... let's move this validation stuff to separate object which
-extended from custom request object:
+And register bundle:
+
+```
+    public function registerBundles()
+    {
+        $bundles = [
+            // ...
+            new \Fesor\RequestObject\Bundle\RequestObjectBundle(),
+        ];
+    }
+```
+
+And that's it!
+
+## Usage
+
+Just create your request object extended from `Fesor\RequestObject\Request`, defined validation rules:
 
 ```php
 use Fesor\RequestObject\Request;
@@ -63,7 +64,7 @@ class RegisterUserRequest extends Request
 }
 ```
 
-And then we can just use in in our controllers:
+And then we can use it in our controllers:
 
 ```php
 public function registerUserAction(RegisterUserRequest $request)
@@ -74,7 +75,34 @@ public function registerUserAction(RegisterUserRequest $request)
 }
 ```
 
-And that's all! No configuration needed!
+This library automatically resolves request by reflection, fill it with data and validate over defined rules.
+If request data is invalid then exception will be thrown.
+
+If you want to generate custom error response instead of relying on global error controller, just implement
+`ErrorResponseProvider` interface in your request:
+
+```
+class ExtendedRegisterUserRequest extends RegisterUserRequest implements ErrorResponseProvider
+{
+    public function getErrorResponse(ConstraintViolationListInterface $errors)
+    {
+        return new JsonResponse([
+            'message' => 'Please check your data',
+            'errors' => array_map(function (ConstraintViolation $violation) {
+
+                return [
+                    'path' => $violation->getPropertyPath(),
+                    'message' => $violation->getMessage()
+                ];
+            }, iterator_to_array($errors))
+        ], 400);
+    }
+
+}
+```
+
+In case of invalid request data method `getErrorResponse` will be called. Here you can create your
+ custom error responses. Also you can move this to some base class to remove code duplication.
 
 ## Contribution
 
