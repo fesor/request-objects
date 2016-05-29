@@ -1,5 +1,5 @@
 {
-    "name": "fesor/request-object",
+    "name": "fesor/request-objects",
     "description": "Custom request objects for Symfony made to make life less painful",
     "type": "library",
     "license": "MIT",
@@ -21,7 +21,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6.0",
         "symfony/http-foundation": "^3.0",
         "symfony/validator": "^3.0"
     },
