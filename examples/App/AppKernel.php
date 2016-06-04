@@ -1,10 +1,9 @@
 <?php
 
-namespace Fesor\RequestObject\Examples;
+namespace Fesor\RequestObject\Examples\App;
 
 use Fesor\RequestObject\Bundle\RequestObjectBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel

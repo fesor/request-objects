@@ -16,7 +16,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Fesor\\RequestObject\\Examples\\": "tests/examples"
+            "Fesor\\RequestObject\\Examples\\": "examples/"
         }
     },
     "minimum-stability": "stable",

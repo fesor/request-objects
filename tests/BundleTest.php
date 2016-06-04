@@ -1,18 +1,19 @@
 <?php
 
 use \Fesor\RequestObject\Examples;
+use \Fesor\RequestObject\Examples\App;
 use \Symfony\Component\HttpFoundation\Request;
 
 class BundleTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Examples\AppKernel
+     * @var App\AppKernel
      */
     private $kernel;
 
     function setUp()
     {
-        $kernel = new Examples\AppKernel('test', true);
+        $kernel = new App\AppKernel('test', true);
         $kernel->boot();
 
         $this->kernel = $kernel;

@@ -1,0 +1,11 @@
+register_user:
+    path:      /users
+    defaults:  {_controller: 'app_controller:registerUserAction'}
+
+register_user_custom:
+    path:       /users_custom
+    defaults:  {_controller: 'app_controller:registerUserCustomAction'}
+
+no_custom_request:
+    path:       /no_request
+    defaults:  {_controller: 'app_controller:noCustomRequestAction'}

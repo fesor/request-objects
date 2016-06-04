@@ -16,5 +16,5 @@ framework:
       enabled: true
 
 services:
-  register_user_controller:
-    class: 'Fesor\RequestObject\Examples\RegisterUserController'
+  app_controller:
+    class: 'Fesor\RequestObject\Examples\App\AppController'

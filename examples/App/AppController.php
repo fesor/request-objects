@@ -1,6 +1,6 @@
 <?php
 
-namespace Fesor\RequestObject\Examples;
+namespace Fesor\RequestObject\Examples\App;
 
 use Fesor\RequestObject\Examples\Request\ExtendedRegisterUserRequest;
 use Fesor\RequestObject\Examples\Request\RegisterUserRequest;
@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegisterUserController extends Controller
+class AppController extends Controller
 {
     public function registerUserAction(RegisterUserRequest $request)
     {
