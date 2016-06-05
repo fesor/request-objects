@@ -44,7 +44,7 @@ class BundleTest extends PHPUnit_Framework_TestCase
             'first_name' => 'John',
             'last_name' => 'Doe'
         ];
-        
+
         $this->kernel->handle(Request::create('/users', 'POST', $payload));
     }
 
@@ -67,5 +67,12 @@ class BundleTest extends PHPUnit_Framework_TestCase
     {
         $response = $this->kernel->handle(Request::create('/no_request', 'POST', []));
         $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    function testHandlingValidationErrorsInAction()
+    {
+        $response = $this->kernel->handle(Request::create('/validation_results', 'POST', []));
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(4, $response->getContent());
     }
 }

@@ -29,7 +29,8 @@ class ExamplesTest extends PHPUnit_Framework_TestCase
             'first_name' => 'John',
             'last_name' => 'Doe'
         ]);
-        $request = $this->requestBinder->bind($requestClassName, $httpRequest);
+        $bindedRequest = $this->requestBinder->bind($requestClassName, $httpRequest);
+        $request = $bindedRequest->getRequestObject();
 
         $this->assertEquals('user@example.com', $request->get('email'));
         $this->assertEquals('example', $request->get('password'));

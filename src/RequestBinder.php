@@ -25,32 +25,30 @@ class RequestBinder
     /**
      * @param $requestClassName
      * @param HttpRequest $httpRequest
-     * @return Request
+     * @return BindedRequest
      */
     public function bind($requestClassName, HttpRequest $httpRequest)
     {
         $payload = $this->payloadResolver->resolvePayload($httpRequest);
         $requestObject = new $requestClassName($payload);
 
-        if ($requestObject instanceof ValidationRequiredRequest) {
-            $this->validateRequest($payload, $requestObject);
-        }
-
-        return $requestObject;
+        return new BindedRequest($requestObject, $this->validateRequest($payload, $requestObject));
     }
 
-    private function validateRequest(array $payload, ValidationRequiredRequest $requestObject)
+    public function bindOrFail($requestClassName, HttpRequest $httpRequest)
     {
-        $errors = $this->validator->validate(
+        $binded = $this->bind($requestClassName, $httpRequest);
+        $binded->failOnInvalid();
+
+        return $binded;
+    }
+
+    private function validateRequest(array $payload, Request $requestObject)
+    {
+        return $this->validator->validate(
             $payload,
             $requestObject->rules(),
             $requestObject->validationGroup()
         );
-
-        if (0 === count($errors)) {
-            return;
-        }
-
-        throw new InvalidRequestPayloadException($requestObject, $errors);
     }
 }

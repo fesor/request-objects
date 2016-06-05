@@ -9,3 +9,7 @@ register_user_custom:
 no_custom_request:
     path:       /no_request
     defaults:  {_controller: 'app_controller:noCustomRequestAction'}
+
+validation_results:
+    path:       /validation_results
+    defaults:  {_controller: 'app_controller:validationResultsAction'}

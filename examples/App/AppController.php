@@ -7,6 +7,7 @@ use Fesor\RequestObject\Examples\Request\RegisterUserRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class AppController extends Controller
 {
@@ -23,5 +24,10 @@ class AppController extends Controller
     public function noCustomRequestAction($foo = '')
     {
         return new Response(null, 204);
+    }
+
+    public function validationResultsAction(RegisterUserRequest $request, ConstraintViolationList $errors)
+    {
+        return new Response(count($errors), 200, ['Content-Type' => 'text/plain']);
     }
 }

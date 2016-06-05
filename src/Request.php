@@ -2,13 +2,13 @@
 
 namespace Fesor\RequestObject;
 
-class Request implements ValidationRequiredRequest
+class Request
 {
     private $payload;
 
     /**
      * Request constructor.
-     * @param $payload
+     * @param array $payload
      */
     public function __construct(array $payload = [])
     {

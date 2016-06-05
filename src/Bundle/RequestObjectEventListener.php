@@ -8,6 +8,7 @@ use Fesor\RequestObject\Request;
 use Fesor\RequestObject\RequestBinder;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class RequestObjectEventListener
 {
@@ -24,7 +25,6 @@ class RequestObjectEventListener
 
     public function onKernelController(FilterControllerEvent $event)
     {
-
         $controller = $event->getController();
 
         if (!is_array($controller)) {
@@ -36,19 +36,22 @@ class RequestObjectEventListener
         $actionReflection = $controllerReflection->getMethod($controller[1]);
         $arguments = $actionReflection->getParameters();
 
-        foreach ($arguments as $argument) {
-            if (!($className = $argument->getClass())) {
-                continue;
-            }
-            $className = $className->getName();
-            
-            $parents = class_parents($className);
-            if (!in_array(Request::class, $parents)) {
-                continue;
-            }
+        $requestObjectArgument = $this->findSubtypeArgument($arguments, Request::class);
+        if (null === $requestObjectArgument) {
+            return;
+        }
+        $errorListArgument = $this->findSubtypeArgument($arguments, ConstraintViolationListInterface::class);
+        $className = $requestObjectArgument->getClass()->getName();
 
-            $requestObject = $this->requestBinder->bind($className, $request);
-            $request->attributes->set($argument->getName(), $requestObject);
+        if (!$errorListArgument) {
+            $bindedRequest = $this->requestBinder->bindOrFail($className, $request);
+        } else {
+            $bindedRequest = $this->requestBinder->bind($className, $request);
+        }
+
+        $request->attributes->set($requestObjectArgument->getName(), $bindedRequest->getRequestObject());
+        if ($errorListArgument) {
+            $request->attributes->set($errorListArgument->getName(), $bindedRequest->getErrors());
         }
     }
     
@@ -71,4 +74,24 @@ class RequestObjectEventListener
         );
     }
 
+    /**
+     * @param \ReflectionParameter[] $arguments
+     * @param string $subtype
+     * @return \ReflectionParameter
+     */
+    private function findSubtypeArgument(array $arguments, $subtype)
+    {
+        foreach ($arguments as $argument)
+        {
+            if (!($className = $argument->getClass())) {
+                continue;
+            }
+            $className = $className->getName();
+            if (is_a($className, $subtype, true)) {
+                return $argument;
+            }
+        }
+
+        return null;
+    }
 }
