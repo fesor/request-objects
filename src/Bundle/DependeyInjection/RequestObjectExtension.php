@@ -6,6 +6,7 @@ use Fesor\RequestObject\Bundle\RequestObjectEventListener;
 use Fesor\RequestObject\HttpPayloadResolver;
 use Fesor\RequestObject\PayloadResolver;
 use Fesor\RequestObject\RequestBinder;
+use Fesor\RequestObject\RequestObjectBinder;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
@@ -34,7 +35,7 @@ class RequestObjectExtension extends Extension
     
     private function registerRequestBinder(ContainerBuilder $container)
     {
-        $definition = new Definition(RequestBinder::class, []);
+        $definition = new Definition(RequestObjectBinder::class, []);
         $definition->setAutowired(true);
         $definition->setPublic(false);
         $container->setDefinition('request_object.request_binder', $definition);
@@ -48,10 +49,6 @@ class RequestObjectExtension extends Extension
         $definition->addTag('kernel.event_listener', array(
             'event'  => 'kernel.controller',
             'method' => 'onKernelController'
-        ));
-        $definition->addTag('kernel.event_listener', array(
-            'event'  => 'kernel.exception',
-            'method' => 'onKernelException'
         ));
         
         $container->setDefinition('request_object.event_listener.controller', $definition);
