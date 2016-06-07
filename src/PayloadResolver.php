@@ -2,7 +2,7 @@
 
 namespace Fesor\RequestObject;
 
-use Symfony\Component\HttpFoundation\Request as HttpRequest;;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 interface PayloadResolver
 {
