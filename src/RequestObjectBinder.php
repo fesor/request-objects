@@ -9,11 +9,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RequestObjectBinder
 {
-
+    /**
+     * @var ValidatorInterface
+     */
     private $validator;
 
+    /**
+     * @var PayloadResolver
+     */
     private $payloadResolver;
 
+    /**
+     * @var ErrorResponseProvider|null
+     */
     private $errorResponseProvider;
 
     /**
@@ -46,18 +54,18 @@ class RequestObjectBinder
         }
 
         $payload = $this->payloadResolver->resolvePayload($request);
-        $requestObjectClass = $matchedArguments['requestObject']->getClass()->getName();
+        $requestObjectClass = $matchedArguments['requestObject']->getClass()->name;
         /** @var Request $requestObject */
         $requestObject = new $requestObjectClass($payload);
         $request->attributes->set(
-            $matchedArguments['requestObject']->getName(),
+            $matchedArguments['requestObject']->name,
             $requestObject
         );
 
         $errors = $this->validator->validate($payload, $requestObject->rules(), $requestObject->validationGroup());
 
         if (isset($matchedArguments['errors'])) {
-            $request->attributes->set($matchedArguments['errors']->getName(), $errors);
+            $request->attributes->set($matchedArguments['errors']->name, $errors);
         } elseif (0 !== count($errors)) {
             return $this->providerErrorResponse($requestObject, $errors);
         }
@@ -65,6 +73,12 @@ class RequestObjectBinder
         return null;
     }
 
+    /**
+     * @param Request $requestObject
+     * @param ConstraintViolationListInterface $errors
+     * @return Response
+     * @throws InvalidRequestPayloadException
+     */
     private function providerErrorResponse(Request $requestObject, ConstraintViolationListInterface $errors)
     {
         if ($requestObject instanceof ErrorResponseProvider) {
@@ -105,14 +119,17 @@ class RequestObjectBinder
         return $matchedArguments;
     }
 
+    /**
+     * @param \ReflectionParameter $argument
+     * @param string $subtype
+     * @return bool
+     */
     private function isArgumentIsSubtypeOf(\ReflectionParameter $argument, $subtype)
     {
         if (!($className = $argument->getClass())) {
             return false;
         }
 
-        $className = $className->getName();
-
-        return is_a($className, $subtype, true);
+        return is_a($className->name, $subtype, true);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Fesor\RequestObject;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;;
 
 interface PayloadResolver
 {
@@ -16,8 +16,8 @@ interface PayloadResolver
      * The only note that payload should be closest
      * to request as it possible.
      *
-     * @param Request $request
+     * @param HttpRequest $request
      * @return array
      */
-    public function resolvePayload(Request $request);
+    public function resolvePayload(HttpRequest $request);
 }

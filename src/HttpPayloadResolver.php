@@ -2,14 +2,14 @@
 
 namespace Fesor\RequestObject;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 class HttpPayloadResolver implements PayloadResolver
 {
     /**
      * @inheritdoc
      */
-    public function resolvePayload(Request $request)
+    public function resolvePayload(HttpRequest $request)
     {
         if ($this->shouldNotHasRequestBody($request->getMethod())) {
             return $request->query->all();
