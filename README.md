@@ -2,28 +2,23 @@ Symfony Request Objects
 ===========================
 
 [![Build Status](https://travis-ci.org/fesor/request-objects.svg?branch=master)](https://travis-ci.org/fesor/request-objects)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fesor/request-objects/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fesor/request-objects/?branch=master)
 
-**Note**: Please note that this is very unstable solution so be careful with it. And please give your feedback!
-I appreciate it.
+**Note**: This library should not be considered as production ready until 1.0 release.
+Please provide your feedback to make it happen!
 
 ## Why?
 
-Most of Symfony developers uses `symfony/forms` to map request data to some objects.
-This object then validates with `symfony/validation` and system start to work with data.
+Symfony Forms component is a very powerful tool for handling forms. But nowadays things have changed.
+Complex forms are handled mostly on client side. As for simple forms symfony/forms has very large overhead.
 
-Symfony/forms is great component which simplifies life alot when you are dealing with forms.
-But what if you don't have any forms? For example you are developing HTTP API and you already have
-pretty much structured request data, which should be validated.
+And in some cases you just don't have forms. For example, if you are developing HTTP API, you probably just
+need to interact with request payload. So why not just wrap request payload to some user defined object
+and validate just it? This also encourages separation of concerns and will help you in case of API versioning.
 
-FosRest bundle provides `ParamFetcher`, but it doesn't allow to validate all request and will fail on
-first failed constraint.
+## Usage
 
-Spring and Laravel has diffrent implementation of the same ideas: map request data to some object
-and validate it at front-controller level. So why not in Symfony?
-
-## Installation
-
-Use composer:
+First of all we need to install this package via composer:
 
 ```
 composer require fesor/request-objects
@@ -41,11 +36,13 @@ And register bundle:
     }
 ```
 
-And that's it!
+Bundle doesn't require any additional configurations, but you could also specify error response
+provider service in bundle config. We will back to this in "Handle validation errors" section.
 
-## Usage
+### Define your request objects
 
-Just create your request object extended from `Fesor\RequestObject\Request`, define validation rules:
+All user defined requests should extended from `Fesor\RequestObject\Request`. Let's create simple
+request object for user registration action:
 
 ```php
 use Fesor\RequestObject\Request;
@@ -64,43 +61,35 @@ class RegisterUserRequest extends Request
 }
 ```
 
-And then use it in our controllers:
+After that we can just use it in our action:
 
 ```php
 public function registerUserAction(RegisterUserRequest $request)
 {
-    // do real stuff! Data is already validated!
+    // Do Stuff! Data is already validated!
 }
 ```
 
-This library automatically resolves request by reflection, fill it with data and validate over defined rules.
-If request data is invalid then exception will be thrown.
+This bundle will bind validated request object to argument `$request`. Request object has very simple interface
+ for data interaction. It very similar to symfony's request object but considered immutable by default (but you
+ can add some setters if you wish so)
 
-If you want to generate custom error response instead of relying on global error controller, just implement
-`ErrorResponseProvider` interface in your request:
+```
+// returns value from payload by specific key or default value if provided
+$request->get('key', 'default value');
 
-```php
-class ExtendedRegisterUserRequest extends RegisterUserRequest implements ErrorResponseProvider
-{
-    public function getErrorResponse(ConstraintViolationListInterface $errors)
-    {
-        return new JsonResponse([
-            'message' => 'Please check your data',
-            'errors' => array_map(function (ConstraintViolation $violation) {
-
-                return [
-                    'path' => $violation->getPropertyPath(),
-                    'message' => $violation->getMessage()
-                ];
-            }, iterator_to_array($errors))
-        ], 400);
-    }
-
-}
+// returns whole payload
+$request->all();
 ```
 
-In case of invalid request data method `getErrorResponse` will be called. Here you can create your
- custom error responses. Also you can move this to some base class to remove code duplication.
+### Validating payload
+
+As you can see from previous example, method `rules` should return validation rules for symfony validator.
+Your request payload will be validated against it and you will get valid data in your action.
+
+### Handle validation errors
+
+TODO
 
 ## Contribution
 
