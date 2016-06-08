@@ -2,10 +2,10 @@
 
 namespace Fesor\RequestObject\Examples\Request;
 
-use \Fesor\RequestObject\Request;
+use \Fesor\RequestObject\RequestObject;
 use \Symfony\Component\Validator\Constraints as Assert;
 
-class RegisterUserRequest extends Request
+class RegisterUserRequest extends RequestObject
 {
     public function rules()
     {

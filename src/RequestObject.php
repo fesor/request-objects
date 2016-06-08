@@ -2,7 +2,7 @@
 
 namespace Fesor\RequestObject;
 
-class Request
+class RequestObject
 {
     private $payload;
 
@@ -22,7 +22,7 @@ class Request
     /**
      * @inheritdoc
      */
-    public function validationGroup()
+    public function validationGroup(array $payload)
     {
         return null;
     }

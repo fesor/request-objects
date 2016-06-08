@@ -41,13 +41,13 @@ provider service in bundle config. We will back to this in "Handle validation er
 
 ### Define your request objects
 
-All user defined requests should extended from `Fesor\RequestObject\Request`. Let's create simple
+All user defined requests should extended from `Fesor\RequestObject\RequestObject`. Let's create simple
 request object for user registration action:
 
 ```php
 use Fesor\RequestObject\Request;
 
-class RegisterUserRequest extends Request
+class RegisterUserRequest extends RequestObject
 {
     public function rules()
     {
@@ -74,7 +74,7 @@ This bundle will bind validated request object to argument `$request`. Request o
  for data interaction. It very similar to symfony's request object but considered immutable by default (but you
  can add some setters if you wish so)
 
-```
+```php
 // returns value from payload by specific key or default value if provided
 $request->get('key', 'default value');
 
@@ -82,10 +82,21 @@ $request->get('key', 'default value');
 $request->all();
 ```
 
+### Where payload comes from?
+
+This library has default implementation of `PayloadResolver` interface, which acts this way:
+
+1) If request can has body (i.e. it is POST, PUT, PATCH or whatever request with body)
+it uses union of `$request->request->all()` and `$request->files->all()` arrays as payload.
+
+2) If request can't has body (i.e. GET, HEAD verbs) then it uses `$request->query->all()`.
+
 ### Validating payload
 
-As you can see from previous example, method `rules` should return validation rules for symfony validator.
+As you can see from previous example, method `rules` should return validation rules for [symfony validator](http://symfony.com/doc/current/book/validation.html).
 Your request payload will be validated against it and you will get valid data in your action.
+
+If you have some validation rules which depends of payload data, then you can handle it via validation groups.
 
 ### Handle validation errors
 

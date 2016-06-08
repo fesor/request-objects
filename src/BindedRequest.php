@@ -12,17 +12,17 @@ class BindedRequest
 
     /**
      * BindedRequest constructor.
-     * @param Request $requestObject
+     * @param RequestObject $requestObject
      * @param ConstraintViolationListInterface $errors
      */
-    public function __construct(Request $requestObject, ConstraintViolationListInterface $errors)
+    public function __construct(RequestObject $requestObject, ConstraintViolationListInterface $errors)
     {
         $this->requestObject = $requestObject;
         $this->errors = $errors;
     }
 
     /**
-     * @return Request
+     * @return RequestObject
      */
     public function getRequestObject()
     {

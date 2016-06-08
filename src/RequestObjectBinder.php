@@ -2,7 +2,7 @@
 
 namespace Fesor\RequestObject;
 
-use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -42,11 +42,11 @@ class RequestObjectBinder
     }
 
     /**
-     * @param HttpRequest $request
+     * @param Request $request
      * @param callable $action
      * @return Response|null
      */
-    public function bind(HttpRequest $request, callable $action)
+    public function bind(Request $request, callable $action)
     {
         $matchedArguments = $this->matchActionArguments($action);
         if (!isset($matchedArguments['requestObject'])) {
@@ -55,16 +55,20 @@ class RequestObjectBinder
 
         $payload = $this->payloadResolver->resolvePayload($request);
         $requestObjectClass = $matchedArguments['requestObject']->getClass()->name;
-        /** @var Request $requestObject */
+        /** @var RequestObject $requestObject */
         $requestObject = new $requestObjectClass();
         $request->attributes->set(
             $matchedArguments['requestObject']->name,
             $requestObject
         );
 
-        $errors = $this->validator->validate($payload, $requestObject->rules(), $requestObject->validationGroup());
+        $errors = $this->validator->validate(
+            $payload,
+            $requestObject->rules(),
+            $requestObject->validationGroup($payload)
+        );
+        
         $requestObject->setPayload($payload);
-
         if (isset($matchedArguments['errors'])) {
             $request->attributes->set($matchedArguments['errors']->name, $errors);
         } elseif (0 !== count($errors)) {
@@ -75,12 +79,12 @@ class RequestObjectBinder
     }
 
     /**
-     * @param Request $requestObject
+     * @param RequestObject $requestObject
      * @param ConstraintViolationListInterface $errors
      * @return Response
      * @throws InvalidRequestPayloadException
      */
-    private function providerErrorResponse(Request $requestObject, ConstraintViolationListInterface $errors)
+    private function providerErrorResponse(RequestObject $requestObject, ConstraintViolationListInterface $errors)
     {
         if ($requestObject instanceof ErrorResponseProvider) {
             return $requestObject->getErrorResponse($errors);
@@ -109,7 +113,7 @@ class RequestObjectBinder
         $matchedArguments = [];
         $arguments = $actionReflection->getParameters();
         foreach ($arguments as $argument) {
-            if ($this->isArgumentIsSubtypeOf($argument, Request::class)) {
+            if ($this->isArgumentIsSubtypeOf($argument, RequestObject::class)) {
                 $matchedArguments['requestObject'] = $argument;
             }
             if ($this->isArgumentIsSubtypeOf($argument, ConstraintViolationListInterface::class)) {

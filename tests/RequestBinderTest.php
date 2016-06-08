@@ -36,7 +36,7 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
             ->bind($this->request, [$this, 'action']);
 
         $this->assertTrue($this->request->attributes->has('requestObj'));
-        $this->assertInstanceOf(RequestObject\Request::class, $this->request->attributes->get('requestObj'));
+        $this->assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
     }
 
 
@@ -47,7 +47,7 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
             ->bind($this->request, function (RegisterUserRequest $requestObj) {});
 
         $this->assertTrue($this->request->attributes->has('requestObj'));
-        $this->assertInstanceOf(RequestObject\Request::class, $this->request->attributes->get('requestObj'));
+        $this->assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
     }
 
     function testPassErrorsToAction()
