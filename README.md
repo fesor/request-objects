@@ -122,7 +122,46 @@ If you have some validation rules which depends of payload data, then you can ha
 
 ### Handle validation errors
 
-TODO
+If validated data is invalid, library will throw exception which wil contain validation errors and request object.
+
+But if you don't want to handle it via `kernel.exception` listener, you have several options.
+
+First is to use your controller action to handle errors:
+
+```php
+
+public function registerUserAction(RegisterUserRequest $request, ConstraintViolationList $errors)
+{
+    if (0 !== count($errors)) {
+        // handle errors
+    }
+}
+
+```
+
+But this not so handy and will break DRY if you just need to return common error response. Thats why
+library provide you `ErrorResponseProvider` interface. You can impllement it in you request object and move this
+code to `getErrorResponse` method:
+
+```php
+public function getErrorResponse(ConstraintViolationListInterface $errors)
+{
+    return new JsonResponse([
+        'message' => 'Please check your data',
+        'errors' => array_map(function (ConstraintViolation $violation) {
+
+            return [
+                'path' => $violation->getPropertyPath(),
+                'message' => $violation->getMessage()
+            ];
+        }, iterator_to_array($errors))
+    ], 400);
+}
+```
+
+## More examples
+
+If you still not sure is it useful for you, please see `examples` directory for more use cases.
 
 ## Contribution
 
