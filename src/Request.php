@@ -6,11 +6,7 @@ class Request
 {
     private $payload;
 
-    /**
-     * Request constructor.
-     * @param array $payload
-     */
-    public function __construct(array $payload = [])
+    public function setPayload(array $payload = [])
     {
         $this->payload = $payload;
     }

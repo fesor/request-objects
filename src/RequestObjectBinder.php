@@ -56,13 +56,14 @@ class RequestObjectBinder
         $payload = $this->payloadResolver->resolvePayload($request);
         $requestObjectClass = $matchedArguments['requestObject']->getClass()->name;
         /** @var Request $requestObject */
-        $requestObject = new $requestObjectClass($payload);
+        $requestObject = new $requestObjectClass();
         $request->attributes->set(
             $matchedArguments['requestObject']->name,
             $requestObject
         );
 
         $errors = $this->validator->validate($payload, $requestObject->rules(), $requestObject->validationGroup());
+        $requestObject->setPayload($payload);
 
         if (isset($matchedArguments['errors'])) {
             $request->attributes->set($matchedArguments['errors']->name, $errors);
