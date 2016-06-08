@@ -3,6 +3,9 @@ Symfony Request Objects
 
 [![Build Status](https://travis-ci.org/fesor/request-objects.svg?branch=master)](https://travis-ci.org/fesor/request-objects)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fesor/request-objects/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fesor/request-objects/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/fesor/request-objects/v/stable)](https://packagist.org/packages/fesor/request-objects)
+[![Total Downloads](https://poser.pugx.org/fesor/request-objects/downloads)](https://packagist.org/packages/fesor/request-objects)
+[![License](https://poser.pugx.org/fesor/request-objects/license)](https://packagist.org/packages/fesor/request-objects)
 
 **Note**: This library should not be considered as production ready until 1.0 release.
 Please provide your feedback to make it happen!
