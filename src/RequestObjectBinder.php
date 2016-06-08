@@ -53,7 +53,7 @@ class RequestObjectBinder
             return null;
         }
 
-        $payload = $this->payloadResolver->resolvePayload($request);
+
         $requestObjectClass = $matchedArguments['requestObject']->getClass()->name;
         /** @var RequestObject $requestObject */
         $requestObject = new $requestObjectClass();
@@ -61,6 +61,8 @@ class RequestObjectBinder
             $matchedArguments['requestObject']->name,
             $requestObject
         );
+
+        $payload = $this->resolvePayload($requestObject, $request);
 
         $errors = $this->validator->validate(
             $payload,
@@ -122,6 +124,16 @@ class RequestObjectBinder
         }
 
         return $matchedArguments;
+    }
+
+    private function resolvePayload(RequestObject $requestObject, Request $request)
+    {
+        if ($requestObject instanceof PayloadResolver) {
+
+            return $requestObject->resolvePayload($request);
+        }
+
+        return $this->payloadResolver->resolvePayload($request);
     }
 
     /**

@@ -91,6 +91,28 @@ it uses union of `$request->request->all()` and `$request->files->all()` arrays 
 
 2) If request can't has body (i.e. GET, HEAD verbs) then it uses `$request->query->all()`.
 
+If you wish to apply custom logic for payload extraction, you could implement `PayloadResolver` interface within
+your request object:
+
+```php
+class CustomizedPayloadRequest extends RequestObject implements PayloadResolver
+{
+    public function resolvePayload(Request $request)
+    {
+        $query = $request->query->all();
+        // turn string to array of relations
+        if (isset($query['includes'])) {
+            $query['includes'] = explode(',', $query['includes']);
+        }
+
+        return $query;
+    }
+}
+```
+
+This will allow you to do some crazy stuff with your requests and DRY a lot of stuff.
+
+
 ### Validating payload
 
 As you can see from previous example, method `rules` should return validation rules for [symfony validator](http://symfony.com/doc/current/book/validation.html).

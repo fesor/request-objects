@@ -4,6 +4,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use Fesor\RequestObject;
 use \Fesor\RequestObject\RequestObjectBinder;
 use \Fesor\RequestObject\Examples\Request\RegisterUserRequest;
+use \Fesor\RequestObject\Examples\Request\CustomizedPayloadRequest;
 use Fesor\RequestObject\Examples\Request\ExtendedRegisterUserRequest;
 use \Symfony\Component\Validator\ConstraintViolationList;
 use \Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -15,8 +16,10 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
     /** @var  Request */
     private $request;
 
+    /** @var  RequestObject\PayloadResolver */
     private $payloadResolver;
 
+    /** @var  ValidatorInterface */
     private $validator;
 
     function setUp()
@@ -100,8 +103,12 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
             ->bind($this->request, function (RegisterUserRequest $requestObj) {});
     }
 
-    function action(RegisterUserRequest $requestObj)
+    function testRequestWithPayloadResolver()
     {
+        $this->payloadResolver->expects($this->never())->method('resolvePayload');
+        $this->validRequest();
+        (new RequestObjectBinder($this->payloadResolver, $this->validator))
+            ->bind($this->request, function (CustomizedPayloadRequest $requestObj) {});
     }
 
     private function validRequest()
@@ -114,5 +121,10 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
         $this->validator->method('validate')->willReturn(new ConstraintViolationList([
             new ConstraintViolation('test', 'test', [], [], 'test', null)
         ]));
+    }
+
+    // fake
+    function action(RegisterUserRequest $requestObj)
+    {
     }
 }
