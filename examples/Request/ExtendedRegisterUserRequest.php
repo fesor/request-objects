@@ -2,25 +2,16 @@
 
 namespace Fesor\RequestObject\Examples\Request;
 
-use Fesor\RequestObject\ErrorResponseProvider;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use \Symfony\Component\Validator\Constraints as Assert;
 
-class ExtendedRegisterUserRequest extends RegisterUserRequest implements ErrorResponseProvider
+class ExtendedRegisterUserRequest extends RegisterUserRequest
 {
-    public function getErrorResponse(ConstraintViolationListInterface $errors)
+    public function rules()
     {
-        return new JsonResponse([
-            'message' => 'Please check your data',
-            'errors' => array_map(function (ConstraintViolation $violation) {
-
-                return [
-                    'path' => $violation->getPropertyPath(),
-                    'message' => $violation->getMessage()
-                ];
-            }, iterator_to_array($errors))
-        ], 400);
+        return new Assert\Collection(array_merge([
+            'additional_field' => new Assert\NotBlank([
+                'message' => 'Extended request requires additional field'
+            ]),
+        ], parent::rules()->fields));
     }
-
 }

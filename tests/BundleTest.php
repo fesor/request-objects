@@ -3,6 +3,7 @@
 use \Fesor\RequestObject\Examples;
 use \Fesor\RequestObject\Examples\App;
 use \Symfony\Component\HttpFoundation\Request;
+use \Fesor\RequestObject\InvalidRequestPayloadException;
 
 class BundleTest extends PHPUnit_Framework_TestCase
 {
@@ -42,22 +43,32 @@ class BundleTest extends PHPUnit_Framework_TestCase
             'email' => 'invalid',
             'password' => 'example',
             'first_name' => 'John',
-            'last_name' => 'Doe'
+            'last_name' => 'Doe',
         ];
 
         $this->kernel->handle(Request::create('/users', 'POST', $payload));
     }
 
-    function testCustomInvalidRequestResponse()
+    function testExtendedRequestObject()
     {
+        $this->expectException(InvalidRequestPayloadException::class);
         $payload = [
             'email' => 'invalid',
             'password' => 'example',
             'first_name' => 'John',
-            'last_name' => 'Doe'
+            'last_name' => 'Doe',
         ];
 
-        $response = $this->kernel->handle(Request::create('/users_custom', 'POST', $payload));
+        $response = $this->kernel->handle(Request::create('/users_extended', 'POST', $payload));
+        $responseBody = json_decode($response->getContent(), true);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertCount(1, $responseBody['errors']);
+    }
+
+    function testErrorResposeProvidingRequest()
+    {
+        $payload = [];
+        $response = $this->kernel->handle(Request::create('/error_response', 'POST', $payload));
         $responseBody = json_decode($response->getContent(), true);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertCount(1, $responseBody['errors']);

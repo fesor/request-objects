@@ -5,7 +5,7 @@ use Fesor\RequestObject;
 use \Fesor\RequestObject\RequestObjectBinder;
 use \Fesor\RequestObject\Examples\Request\RegisterUserRequest;
 use \Fesor\RequestObject\Examples\Request\CustomizedPayloadRequest;
-use Fesor\RequestObject\Examples\Request\ExtendedRegisterUserRequest;
+use Fesor\RequestObject\Examples\Request\ResponseProvidingRequest;
 use \Symfony\Component\Validator\ConstraintViolationList;
 use \Symfony\Component\Validator\Validator\ValidatorInterface;
 use \Symfony\Component\Validator\ConstraintViolation;
@@ -88,7 +88,7 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
     {
         $this->invalidRequest();
         $response = (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (ExtendedRegisterUserRequest $requestObj) {});
+            ->bind($this->request, function (ResponseProvidingRequest $requestObj) {});
 
         $this->assertInstanceOf(Response::class, $response);
     }

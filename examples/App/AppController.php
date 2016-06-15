@@ -4,6 +4,7 @@ namespace Fesor\RequestObject\Examples\App;
 
 use Fesor\RequestObject\Examples\Request\ExtendedRegisterUserRequest;
 use Fesor\RequestObject\Examples\Request\RegisterUserRequest;
+use Fesor\RequestObject\Examples\Request\ResponseProvidingRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,11 @@ class AppController extends Controller
     }
     
     public function registerUserCustomAction(ExtendedRegisterUserRequest $request)
+    {
+        return new JsonResponse($request->all(), 201);
+    }
+
+    public function withErrorResponseAction(ResponseProvidingRequest $request)
     {
         return new JsonResponse($request->all(), 201);
     }

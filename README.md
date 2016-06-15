@@ -13,15 +13,15 @@ Please provide your feedback to make it happen!
 ## Why?
 
 Symfony Forms component is a very powerful tool for handling forms. But nowadays things have changed.
-Complex forms are handled mostly on client side. As for simple forms symfony/forms has very large overhead.
+Complex forms are handled mostly on the client side. As for simple forms `symfony/forms` has very large overhead.
 
-And in some cases you just don't have forms. For example, if you are developing HTTP API, you probably just
-need to interact with request payload. So why not just wrap request payload to some user defined object
-and validate just it? This also encourages separation of concerns and will help you in case of API versioning.
+And in some cases you just don't have forms. For example, if you are developing an HTTP API, you probably just
+need to interact with request payload. So why not just wrap request payload to some user defined object and
+validate just it? This also encourages separation of concerns and will help you in case of API versioning.
 
 ## Usage
 
-First of all we need to install this package via composer:
+First of all, we need to install this package via composer:
 
 ```
 composer require fesor/request-objects
@@ -74,7 +74,7 @@ public function registerUserAction(RegisterUserRequest $request)
 ```
 
 This bundle will bind validated request object to argument `$request`. Request object has very simple interface
- for data interaction. It very similar to symfony's request object but considered immutable by default (but you
+ for data interaction. It very similar to Symfony's request object but considered immutable by default (but you
  can add some setters if you wish so)
 
 ```php

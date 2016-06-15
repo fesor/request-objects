@@ -2,10 +2,8 @@
 
 namespace Fesor\RequestObject\Bundle;
 
-use Fesor\RequestObject\RequestBinder;
 use Fesor\RequestObject\RequestObjectBinder;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 class RequestObjectEventListener
 {

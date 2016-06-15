@@ -5,7 +5,6 @@ namespace Fesor\RequestObject\Bundle\DependeyInjection;
 use Fesor\RequestObject\Bundle\RequestObjectEventListener;
 use Fesor\RequestObject\HttpPayloadResolver;
 use Fesor\RequestObject\PayloadResolver;
-use Fesor\RequestObject\RequestBinder;
 use Fesor\RequestObject\RequestObjectBinder;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;

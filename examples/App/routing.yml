@@ -2,9 +2,13 @@ register_user:
     path:      /users
     defaults:  {_controller: 'app_controller:registerUserAction'}
 
-register_user_custom:
-    path:       /users_custom
+register_user_extended:
+    path:       /users_extended
     defaults:  {_controller: 'app_controller:registerUserCustomAction'}
+
+error_response:
+    path:       /error_response
+    defaults:  {_controller: 'app_controller:withErrorResponseAction'}
 
 no_custom_request:
     path:       /no_request
