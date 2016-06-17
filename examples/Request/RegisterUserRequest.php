@@ -12,8 +12,8 @@ class RegisterUserRequest extends RequestObject
         return new Assert\Collection([
             'email' => new Assert\Email(['message' => 'Please fill in valid email']),
             'password' => new Assert\Length(['min' => 4, 'minMessage' => 'Password is to short']),
-            'first_name' => new Assert\NotBlank(['message' => 'Please provide your first name']),
-            'last_name' => new Assert\NotBlank(['message' => 'Please provide your last name'])
+            'first_name' => new Assert\Type(['type' => 'string', 'message' => 'Please provide your first name']),
+            'last_name' => new Assert\Type(['type' => 'string', 'message' => 'Please provide your last name'])
         ]);
     }
 }
