@@ -123,8 +123,9 @@ Your request payload will be validated against it and you will get valid data in
 
 If you have some validation rules which depends of payload data, then you can handle it via validation groups.
 
-** Please note**: due some limitations in `Collection` constraint validator it is recommended to use `Callback`
-validator in tricky cases with dependencies on payload data. See [example](examples/Request/ContextDependingRequest.php) for details.
+**Please note**: due limitations in `Collection` constraint validator it is not so handy to use groups.
+ So instead it is recommended to use `Callback` validator in tricky cases with dependencies on payload data.
+ See [example](examples/Request/ContextDependingRequest.php) for details about problem.
 
 You may provide validation group by implementing `validationGroup` method:
 
