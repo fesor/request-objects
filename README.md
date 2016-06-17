@@ -178,7 +178,8 @@ public function getErrorResponse(ConstraintViolationListInterface $errors)
 ## More examples
 
 If you still not sure is it useful for you, please see `examples` directory for more use cases.
+Didn't find your case? Then share your use case in issues!
 
 ## Contribution
 
-At least provide feedback! Write issues! And i will be happy to see any PRs. Thanks.
+Fill free to give feedback and feature requests or post issues. PR's are welcomed!
