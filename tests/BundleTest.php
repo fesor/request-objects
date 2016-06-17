@@ -65,13 +65,41 @@ class BundleTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $responseBody['errors']);
     }
 
-    function testErrorResposeProvidingRequest()
+    function testErrorResponseProvidingRequest()
     {
         $payload = [];
         $response = $this->kernel->handle(Request::create('/error_response', 'POST', $payload));
         $responseBody = json_decode($response->getContent(), true);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertCount(1, $responseBody['errors']);
+    }
+
+    /**
+     * @dataProvider requestPayloadContextsProvider
+     */
+    function testContextDependingRequest($payload, $isPayloadValid)
+    {
+        if (!$isPayloadValid) {
+            $this->expectException(InvalidRequestPayloadException::class);
+        }
+
+        $response = $this->kernel->handle(Request::create('/context_depending', 'POST', $payload));
+        if ($isPayloadValid) {
+            $this->assertEquals(201, $response->getStatusCode());
+        }
+    }
+
+    public function requestPayloadContextsProvider()
+    {
+        return [
+            [['context' => 'first','foo' => 'test','buz' => 'test'], true,],
+            [['context' => 'first', 'foo' => 'test'], false,],
+            [['context' => 'first', 'buz' => 'test1'], false,],
+            [['context' => 'second', 'bar' => 'test', 'buz' => 'test'], true,],
+            [['context' => 'second', 'bar' => 'test'], false,],
+            [['context' => 'second', 'buz' => 'test'], false,],
+            [['buz' => 'test'], true,],
+        ];
     }
 
     function testNoCustomRequest()

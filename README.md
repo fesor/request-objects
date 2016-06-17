@@ -123,6 +123,19 @@ Your request payload will be validated against it and you will get valid data in
 
 If you have some validation rules which depends of payload data, then you can handle it via validation groups.
 
+** Please note**: due some limitations in `Collection` constraint validator it is recommended to use `Callback`
+validator in tricky cases with dependencies on payload data. See [example](examples/Request/ContextDependingRequest.php) for details.
+
+You may provide validation group by implementing `validationGroup` method:
+
+```php
+public function validationGroup(array $payload)
+{
+    return isset($payload['context']) ?
+        ['Default', $payload['context']] : null;
+}
+```
+
 ### Handle validation errors
 
 If validated data is invalid, library will throw exception which wil contain validation errors and request object.

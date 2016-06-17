@@ -10,6 +10,10 @@ error_response:
     path:       /error_response
     defaults:  {_controller: 'app_controller:withErrorResponseAction'}
 
+context_depending:
+    path:       /context_depending
+    defaults:  {_controller: 'app_controller:contextDependingRequestAction'}
+
 no_custom_request:
     path:       /no_request
     defaults:  {_controller: 'app_controller:noCustomRequestAction'}

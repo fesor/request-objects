@@ -2,6 +2,7 @@
 
 namespace Fesor\RequestObject\Examples\App;
 
+use Fesor\RequestObject\Examples\Request\ContextDependingRequest;
 use Fesor\RequestObject\Examples\Request\ExtendedRegisterUserRequest;
 use Fesor\RequestObject\Examples\Request\RegisterUserRequest;
 use Fesor\RequestObject\Examples\Request\ResponseProvidingRequest;
@@ -23,6 +24,11 @@ class AppController extends Controller
     }
 
     public function withErrorResponseAction(ResponseProvidingRequest $request)
+    {
+        return new JsonResponse($request->all(), 201);
+    }
+
+    public function contextDependingRequestAction(ContextDependingRequest $request)
     {
         return new JsonResponse($request->all(), 201);
     }
