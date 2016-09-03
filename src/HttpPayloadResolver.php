@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 class HttpPayloadResolver implements PayloadResolver
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function resolvePayload(Request $request)
     {
@@ -23,7 +23,6 @@ class HttpPayloadResolver implements PayloadResolver
 
     private function shouldNotHasRequestBody($methodName)
     {
-        return in_array($methodName, ['GET', 'HEAD', 'DELETE']);
+        return in_array($methodName, ['GET', 'HEAD', 'DELETE'], true);
     }
-
 }

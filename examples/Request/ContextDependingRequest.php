@@ -27,7 +27,7 @@ class ContextDependingRequest extends RequestObject
                 ),
                 // to be sure that no extra fields allowed by default
                 'foo' => new Assert\Optional(),
-                'bar' => new Assert\Optional()
+                'bar' => new Assert\Optional(),
             ]),
             // add fields required within "first" validation groups
             $this->collection([
@@ -58,7 +58,7 @@ class ContextDependingRequest extends RequestObject
 
             return new Assert\Required([
                 'constraints' => $constraints,
-                'groups' => $options['groups']
+                'groups' => $options['groups'],
             ]);
         }, $fields);
 

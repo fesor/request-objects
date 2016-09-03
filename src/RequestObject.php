@@ -2,6 +2,8 @@
 
 namespace Fesor\RequestObject;
 
+use Symfony\Component\Validator\Constraint;
+
 class RequestObject
 {
     private $payload;
@@ -12,24 +14,23 @@ class RequestObject
     }
 
     /**
-     * @inheritdoc
+     * @return Constraint|Constraint[]
      */
     public function rules()
     {
-        return null;
     }
 
     /**
-     * @inheritdoc
+     * @return array|void
      */
     public function validationGroup(array $payload)
     {
-        return null;
     }
 
     /**
-     * @param string $name
+     * @param string     $name
      * @param mixed|null $default
+     *
      * @return mixed
      */
     public function get($name, $default = null)
@@ -40,6 +41,7 @@ class RequestObject
 
     /**
      * @param string $name
+     *
      * @return bool
      */
     public function has($name)

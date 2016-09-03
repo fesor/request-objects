@@ -11,6 +11,7 @@ class RequestObjectEventListener
 
     /**
      * RequestObjectEventListener constructor.
+     *
      * @param RequestObjectBinder $requestBinder
      */
     public function __construct(RequestObjectBinder $requestBinder)

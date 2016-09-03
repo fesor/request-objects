@@ -1,28 +1,28 @@
 <?php
 
-use \Symfony\Component\HttpFoundation\Request;
 use Fesor\RequestObject;
-use \Fesor\RequestObject\RequestObjectBinder;
-use \Fesor\RequestObject\Examples\Request\RegisterUserRequest;
-use \Fesor\RequestObject\Examples\Request\CustomizedPayloadRequest;
+use Fesor\RequestObject\Examples\Request\CustomizedPayloadRequest;
+use Fesor\RequestObject\Examples\Request\RegisterUserRequest;
 use Fesor\RequestObject\Examples\Request\ResponseProvidingRequest;
-use \Symfony\Component\Validator\ConstraintViolationList;
-use \Symfony\Component\Validator\Validator\ValidatorInterface;
-use \Symfony\Component\Validator\ConstraintViolation;
-use \Symfony\Component\HttpFoundation\Response;
+use Fesor\RequestObject\RequestObjectBinder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RequestBinderTest extends PHPUnit_Framework_TestCase
 {
     /** @var  Request */
     private $request;
 
-    /** @var  RequestObject\PayloadResolver */
+    /** @var  RequestObject\PayloadResolver|PHPUnit_Framework_MockObject_MockObject */
     private $payloadResolver;
 
-    /** @var  ValidatorInterface */
+    /** @var  ValidatorInterface|PHPUnit_Framework_MockObject_MockObject */
     private $validator;
 
-    function setUp()
+    public function setUp()
     {
         $this->request = Request::create('/');
 
@@ -32,83 +32,89 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
         $this->validator = $this->getMockForAbstractClass(ValidatorInterface::class);
     }
 
-    function testRequestObjectBinding()
+    public function testRequestObjectBinding()
     {
         $this->validRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator))
             ->bind($this->request, [$this, 'action']);
 
-        $this->assertTrue($this->request->attributes->has('requestObj'));
-        $this->assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
+        self::assertTrue($this->request->attributes->has('requestObj'));
+        self::assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
     }
 
-
-    function testRequestObjectBindingOnClosure()
+    public function testRequestObjectBindingOnClosure()
     {
         $this->validRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (RegisterUserRequest $requestObj) {});
+            ->bind($this->request, function (RegisterUserRequest $requestObj) {
+            });
 
-        $this->assertTrue($this->request->attributes->has('requestObj'));
-        $this->assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
+        self::assertTrue($this->request->attributes->has('requestObj'));
+        self::assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
     }
 
-    function testPassErrorsToAction()
+    public function testPassErrorsToAction()
     {
         $this->validRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (RegisterUserRequest $requestObj, ConstraintViolationList $errors) {});
+            ->bind($this->request, function (RegisterUserRequest $requestObj, ConstraintViolationList $errors) {
+            });
 
-        $this->assertTrue($this->request->attributes->has('errors'));
-        $this->assertInstanceOf(ConstraintViolationList::class, $this->request->attributes->get('errors'));
+        self::assertTrue($this->request->attributes->has('errors'));
+        self::assertInstanceOf(ConstraintViolationList::class, $this->request->attributes->get('errors'));
     }
 
-    function testPassErrorsToActionOnInvalidRequest()
+    public function testPassErrorsToActionOnInvalidRequest()
     {
         $this->invalidRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (RegisterUserRequest $requestObj, ConstraintViolationList $errors) {});
+            ->bind($this->request, function (RegisterUserRequest $requestObj, ConstraintViolationList $errors) {
+            });
 
-        $this->assertTrue($this->request->attributes->has('errors'));
-        $this->assertInstanceOf(ConstraintViolationList::class, $this->request->attributes->get('errors'));
+        self::assertTrue($this->request->attributes->has('errors'));
+        self::assertInstanceOf(ConstraintViolationList::class, $this->request->attributes->get('errors'));
     }
 
-    function testFailIfNoErrorResponseProviderFound()
+    public function testFailIfNoErrorResponseProviderFound()
     {
         $this->expectException(RequestObject\InvalidRequestPayloadException::class);
         $this->invalidRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (RegisterUserRequest $requestObj) {});
+            ->bind($this->request, function (RegisterUserRequest $requestObj) {
+            });
 
-        $this->assertTrue($this->request->attributes->has('errors'));
-        $this->assertInstanceOf(ConstraintViolationList::class, $this->request->attributes->get('errors'));
+        self::assertTrue($this->request->attributes->has('errors'));
+        self::assertInstanceOf(ConstraintViolationList::class, $this->request->attributes->get('errors'));
     }
 
-    function testErrorResponseProvider()
+    public function testErrorResponseProvider()
     {
         $this->invalidRequest();
         $response = (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (ResponseProvidingRequest $requestObj) {});
+            ->bind($this->request, function (ResponseProvidingRequest $requestObj) {
+            });
 
-        $this->assertInstanceOf(Response::class, $response);
+        self::assertInstanceOf(Response::class, $response);
     }
 
-    function testErrorResponseProviderAsDependency()
+    public function testErrorResponseProviderAsDependency()
     {
         $errorProvider = $this->getMockForAbstractClass(RequestObject\ErrorResponseProvider::class);
-        $errorProvider->expects($this->once())->method('getErrorResponse')->willReturn(new Response());
+        $errorProvider->expects(self::once())->method('getErrorResponse')->willReturn(new Response());
 
         $this->invalidRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator, $errorProvider))
-            ->bind($this->request, function (RegisterUserRequest $requestObj) {});
+            ->bind($this->request, function (RegisterUserRequest $requestObj) {
+            });
     }
 
-    function testRequestWithPayloadResolver()
+    public function testRequestWithPayloadResolver()
     {
-        $this->payloadResolver->expects($this->never())->method('resolvePayload');
+        $this->payloadResolver->expects(self::never())->method('resolvePayload');
         $this->validRequest();
         (new RequestObjectBinder($this->payloadResolver, $this->validator))
-            ->bind($this->request, function (CustomizedPayloadRequest $requestObj) {});
+            ->bind($this->request, function (CustomizedPayloadRequest $requestObj) {
+            });
     }
 
     private function validRequest()
@@ -119,12 +125,12 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
     private function invalidRequest()
     {
         $this->validator->method('validate')->willReturn(new ConstraintViolationList([
-            new ConstraintViolation('test', 'test', [], [], 'test', null)
+            new ConstraintViolation('test', 'test', [], [], 'test', null),
         ]));
     }
 
     // fake
-    function action(RegisterUserRequest $requestObj)
+    public function action(RegisterUserRequest $requestObj)
     {
     }
 }

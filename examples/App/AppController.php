@@ -17,7 +17,7 @@ class AppController extends Controller
     {
         return new JsonResponse($request->all(), 201);
     }
-    
+
     public function registerUserCustomAction(ExtendedRegisterUserRequest $request)
     {
         return new JsonResponse($request->all(), 201);
@@ -32,8 +32,8 @@ class AppController extends Controller
     {
         return new JsonResponse($request->all(), 201);
     }
-    
-    public function noCustomRequestAction($foo = '')
+
+    public function noCustomRequestAction()
     {
         return new Response(null, 204);
     }

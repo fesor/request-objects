@@ -31,7 +31,7 @@ class RequestObjectExtension extends Extension
         $implDefinition->setClass(HttpPayloadResolver::class);
         $container->setDefinition('request_object.payload_resolver.http', $implDefinition);
     }
-    
+
     private function registerRequestBinder(ContainerBuilder $container)
     {
         $definition = new Definition(RequestObjectBinder::class, []);
@@ -43,13 +43,13 @@ class RequestObjectExtension extends Extension
     private function registerEventListener(ContainerBuilder $container)
     {
         $definition = new Definition(RequestObjectEventListener::class, [
-            new Reference('request_object.request_binder')
+            new Reference('request_object.request_binder'),
         ]);
         $definition->addTag('kernel.event_listener', array(
-            'event'  => 'kernel.controller',
-            'method' => 'onKernelController'
+            'event' => 'kernel.controller',
+            'method' => 'onKernelController',
         ));
-        
+
         $container->setDefinition('request_object.event_listener.controller', $definition);
     }
 }

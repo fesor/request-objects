@@ -2,12 +2,12 @@
 
 namespace Fesor\RequestObject;
 
-use Symfony\Component\HttpFoundation\Request as Request;
+use Symfony\Component\HttpFoundation\Request;
 
 interface PayloadResolver
 {
     /**
-     * Extracts payload from request
+     * Extracts payload from request.
      *
      * You can decorate extractor with your additional
      * logic, normalize input, deserialize json or xml
@@ -17,6 +17,7 @@ interface PayloadResolver
      * to request as it possible.
      *
      * @param Request $request
+     *
      * @return array
      */
     public function resolvePayload(Request $request);

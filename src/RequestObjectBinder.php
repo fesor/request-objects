@@ -26,33 +26,33 @@ class RequestObjectBinder
 
     /**
      * RequestObjectBinder constructor.
-     * @param PayloadResolver $payloadResolver
-     * @param ValidatorInterface $validator
+     *
+     * @param PayloadResolver            $payloadResolver
+     * @param ValidatorInterface         $validator
      * @param ErrorResponseProvider|null $errorResponseProvider
      */
     public function __construct(
         PayloadResolver $payloadResolver,
         ValidatorInterface $validator,
         ErrorResponseProvider $errorResponseProvider = null
-    )
-    {
+    ) {
         $this->validator = $validator;
         $this->payloadResolver = $payloadResolver;
         $this->errorResponseProvider = $errorResponseProvider;
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param callable $action
-     * @return Response|null
+     *
+     * @return Response|void
      */
     public function bind(Request $request, callable $action)
     {
         $matchedArguments = $this->matchActionArguments($action);
-        if (!isset($matchedArguments['requestObject'])) {
-            return null;
+        if (!array_key_exists('requestObject', $matchedArguments)) {
+            return;
         }
-
 
         $requestObjectClass = $matchedArguments['requestObject']->getClass()->name;
         /** @var RequestObject $requestObject */
@@ -69,21 +69,21 @@ class RequestObjectBinder
             $requestObject->rules(),
             $requestObject->validationGroup($payload)
         );
-        
+
         $requestObject->setPayload($payload);
-        if (isset($matchedArguments['errors'])) {
+        if (array_key_exists('errors', $matchedArguments)) {
             $request->attributes->set($matchedArguments['errors']->name, $errors);
         } elseif (0 !== count($errors)) {
             return $this->providerErrorResponse($requestObject, $errors);
         }
-
-        return null;
     }
 
     /**
-     * @param RequestObject $requestObject
+     * @param RequestObject                    $requestObject
      * @param ConstraintViolationListInterface $errors
+     *
      * @return Response
+     *
      * @throws InvalidRequestPayloadException
      */
     private function providerErrorResponse(RequestObject $requestObject, ConstraintViolationListInterface $errors)
@@ -101,7 +101,8 @@ class RequestObjectBinder
 
     /**
      * @param callable $action
-     * @return \ReflectionParameter
+     *
+     * @return array
      */
     private function matchActionArguments(callable $action)
     {
@@ -129,7 +130,6 @@ class RequestObjectBinder
     private function resolvePayload(RequestObject $requestObject, Request $request)
     {
         if ($requestObject instanceof PayloadResolver) {
-
             return $requestObject->resolvePayload($request);
         }
 
@@ -138,7 +138,8 @@ class RequestObjectBinder
 
     /**
      * @param \ReflectionParameter $argument
-     * @param string $subtype
+     * @param string               $subtype
+     *
      * @return bool
      */
     private function isArgumentIsSubtypeOf(\ReflectionParameter $argument, $subtype)
