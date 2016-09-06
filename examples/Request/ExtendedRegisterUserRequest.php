@@ -2,7 +2,7 @@
 
 namespace Fesor\RequestObject\Examples\Request;
 
-use \Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ExtendedRegisterUserRequest extends RegisterUserRequest
 {
@@ -10,7 +10,7 @@ class ExtendedRegisterUserRequest extends RegisterUserRequest
     {
         return new Assert\Collection(array_merge([
             'additional_field' => new Assert\NotNull([
-                'message' => 'Extended request requires additional field'
+                'message' => 'Extended request requires additional field',
             ]),
         ], parent::rules()->fields));
     }

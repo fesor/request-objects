@@ -5,7 +5,7 @@ namespace Fesor\RequestObject\Examples\Request;
 use Fesor\RequestObject\ErrorResponseProvider;
 use Fesor\RequestObject\RequestObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use \Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -14,12 +14,12 @@ class ResponseProvidingRequest extends RequestObject implements ErrorResponsePro
     public function rules()
     {
         return new Assert\Collection([
-            'test' => new Assert\NotBlank()
+            'test' => new Assert\NotBlank(),
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getErrorResponse(ConstraintViolationListInterface $errors)
     {
@@ -28,9 +28,9 @@ class ResponseProvidingRequest extends RequestObject implements ErrorResponsePro
             'errors' => array_map(function (ConstraintViolation $violation) {
                 return [
                     'path' => $violation->getPropertyPath(),
-                    'message' => $violation->getMessage()
+                    'message' => $violation->getMessage(),
                 ];
-            }, iterator_to_array($errors))
+            }, iterator_to_array($errors)),
         ], 400);
     }
 }
