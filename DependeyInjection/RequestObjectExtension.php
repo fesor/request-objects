@@ -14,7 +14,12 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class RequestObjectExtension extends Extension
 {
+    const MAPPER_TAG = 'request_mapper';
+
+    const REQUEST_MAPPER_ID='fesor.request_object.mapper';
+
     public function load(array $configs, ContainerBuilder $container)
     {
+
     }
 }

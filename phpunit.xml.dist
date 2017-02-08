@@ -26,6 +26,7 @@
     <testsuites>
         <testsuite name="unit">
             <directory>./Tests/</directory>
+            <exclude>./Tests/Fixtures/</exclude>
             <exclude>./Tests/Functional/</exclude>
         </testsuite>
         <testsuite name="functional">
