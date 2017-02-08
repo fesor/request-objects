@@ -1,24 +1,11 @@
 <?php
 
-namespace Fesor\RequestObject\Bundle;
+namespace Fesor\RequestObject\EventListener;
 
-use Fesor\RequestObject\RequestObjectBinder;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class RequestObjectEventListener
 {
-    private $requestBinder;
-
-    /**
-     * RequestObjectEventListener constructor.
-     *
-     * @param RequestObjectBinder $requestBinder
-     */
-    public function __construct(RequestObjectBinder $requestBinder)
-    {
-        $this->requestBinder = $requestBinder;
-    }
-
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();

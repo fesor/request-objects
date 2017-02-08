@@ -1,6 +1,6 @@
 <?php
 
-namespace Fesor\RequestObject\Bundle;
+namespace Fesor\RequestObject;
 
 use Fesor\RequestObject\Bundle\DependeyInjection\RequestObjectExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
