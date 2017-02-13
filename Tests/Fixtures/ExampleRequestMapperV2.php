@@ -4,7 +4,7 @@ namespace Fesor\RequestObject\Tests\Fixtures;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class ExampleRequestMapper
+class ExampleRequestMapperV2
 {
     public function someSetterForService(string $someParameter)
     {

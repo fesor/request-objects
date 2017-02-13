@@ -10,11 +10,11 @@ class CollectMappersCompilePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $mappers = $container->findTaggedServiceIds(RequestObjectExtension::MAPPER_TAG);
+        $mappers = $this->getMappers($container);
 
         $bindings = [];
-        foreach ($mappers as $mapperId) {
-            $bindings = array_merge($bindings, $this->configureBindings($mapperId, $container->getDefinition($mapperId)));
+        foreach ($mappers as $mapperId => $mapper) {
+            $bindings = array_merge_recursive($bindings, $this->configureBindings($mapperId, $mapper));
         }
 
         $requestMapperDefinition = $container->getDefinition(RequestObjectExtension::REQUEST_MAPPER_ID);
@@ -23,6 +23,8 @@ class CollectMappersCompilePass implements CompilerPassInterface
 
     private function configureBindings(string $id, Definition $mapper)
     {
+        $tag = $mapper->getTag(RequestObjectExtension::MAPPER_TAG);
+
         $classReflection = new \ReflectionClass($mapper->getClass());
         $publicMethods = $classReflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 
@@ -32,9 +34,26 @@ class CollectMappersCompilePass implements CompilerPassInterface
 
         $bindings = [];
         foreach ($mapperMethods as $method) {
-            $bindings[(string) $method->getReturnType()] = [$id, $method->getName()];
+            $bindings[(string) $method->getReturnType()][] = [$id, $method->getName()];
         }
 
         return $bindings;
+    }
+
+    private function getMappers(ContainerBuilder $builder)
+    {
+        $tags = $builder->findTaggedServiceIds(RequestObjectExtension::MAPPER_TAG);
+
+        uasort($tags, function ($a, $b) {
+
+            return ($a['priority'] ?? 0) <=> ($b['priority'] ?? 0);
+        });
+
+        $ids = array_keys($tags);
+
+        return array_combine($ids, array_map(function(string $id) use ($builder) {
+
+            return $builder->getDefinition($id);
+        }, $ids));
     }
 }

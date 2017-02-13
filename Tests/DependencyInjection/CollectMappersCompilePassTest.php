@@ -5,12 +5,11 @@ namespace Fesor\RequestObject\Tests\DependencyInjection;
 use Fesor\RequestObject\DependeyInjection\CollectMappersCompilePass;
 use Fesor\RequestObject\DependeyInjection\RequestObjectExtension;
 use Fesor\RequestObject\Tests\Fixtures\ExampleRequestMapper;
+use Fesor\RequestObject\Tests\Fixtures\ExampleRequestMapperV2;
 use Fesor\RequestObject\Tests\Fixtures\ExampleRequestObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\HttpFoundation\Request;
 
 class CollectMappersCompilePassTest extends TestCase
 {
@@ -29,17 +28,22 @@ class CollectMappersCompilePassTest extends TestCase
         $this->containerMock
             ->getDefinition(RequestObjectExtension::REQUEST_MAPPER_ID)
             ->willReturn($this->definitionMock->reveal());
+
         $this->compilePass = new CollectMappersCompilePass();
     }
 
     public function testRegisterBindings()
     {
         $this->stubTaggedServices([
-            'test.mapper' => ExampleRequestMapper::class
+            'test.mapper' => [ExampleRequestMapper::class, ['priority' => 10]],
+            'test.mapper.v2' => ExampleRequestMapperV2::class,
         ]);
 
         $this->expectBindings([
-            ExampleRequestObject::class => ['test.mapper', 'exampleMapper'],
+            ExampleRequestObject::class => [
+                ['test.mapper.v2', 'exampleMapper'],
+                ['test.mapper', 'exampleMapper'],
+            ],
         ]);
 
         $this->compilePass->process($this->containerMock->reveal());
@@ -47,15 +51,25 @@ class CollectMappersCompilePassTest extends TestCase
 
     private function stubTaggedServices($services)
     {
-        $this->containerMock
-            ->findTaggedServiceIds(RequestObjectExtension::MAPPER_TAG)
-            ->willReturn(array_keys($services))
-            ->shouldBeCalled();
+        $definitions = [];
+        $tags = [];
 
         foreach ($services as $id => $service) {
+            if (!is_array($service)) $service = [$service, []];
+            list($className, $tagAttributes) = $service;
 
-            $definition = new Definition($service);
+            $tags[$id] = $tagAttributes;
+            $definition = new Definition($className);
+            $definition->addTag(RequestObjectExtension::MAPPER_TAG, $tagAttributes);
+            $definitions[$id] = $definition;
+        }
 
+        $this->containerMock
+            ->findTaggedServiceIds(RequestObjectExtension::MAPPER_TAG)
+            ->willReturn($tags)
+            ->shouldBeCalled();
+
+        foreach ($definitions as $id => $definition) {
             $this->containerMock
                 ->getDefinition($id)
                 ->willReturn($definition);
