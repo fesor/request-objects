@@ -44,7 +44,7 @@ provider service in bundle config. We will back to this in "Handle validation er
 
 ### Define your request objects
 
-All user defined requests should extended from `Fesor\RequestObject\RequestObject`. Let's create simple
+All user defined requests should extend `Fesor\RequestObject\RequestObject`. Let's create a simple
 request object for user registration action:
 
 ```php
@@ -74,7 +74,7 @@ public function registerUserAction(RegisterUserRequest $request)
 ```
 
 This bundle will bind validated request object to argument `$request`. Request object has very simple interface
- for data interaction. It very similar to Symfony's request object but considered immutable by default (but you
+ for data interaction. It is very similar to Symfony's request object but is considered immutable by default (but you
  can add some setters if you wish so)
 
 ```php
@@ -89,10 +89,10 @@ $request->all();
 
 This library has default implementation of `PayloadResolver` interface, which acts this way:
 
-1) If request can has body (i.e. it is POST, PUT, PATCH or whatever request with body)
+1) If request can have body (i.e. it is POST, PUT, PATCH or whatever request with body)
 it uses union of `$request->request->all()` and `$request->files->all()` arrays as payload.
 
-2) If request can't has body (i.e. GET, HEAD verbs) then it uses `$request->query->all()`.
+2) If request can't have body (i.e. GET, HEAD verbs) then it uses `$request->query->all()`.
 
 If you wish to apply custom logic for payload extraction, you could implement `PayloadResolver` interface within
 your request object:
@@ -121,9 +121,9 @@ This will allow you to do some crazy stuff with your requests and DRY a lot of s
 As you can see from previous example, method `rules` should return validation rules for [symfony validator](http://symfony.com/doc/current/book/validation.html).
 Your request payload will be validated against it and you will get valid data in your action.
 
-If you have some validation rules which depends of payload data, then you can handle it via validation groups.
+If you have some validation rules which depend on payload data, then you can handle it via validation groups.
 
-**Please note**: due limitations in `Collection` constraint validator it is not so handy to use groups.
+**Please note**: due to limitations in `Collection` constraint validator it is not so handy to use groups.
  So instead it is recommended to use `Callback` validator in tricky cases with dependencies on payload data.
  See [example](examples/Request/ContextDependingRequest.php) for details about problem.
 
@@ -157,7 +157,7 @@ public function registerUserAction(RegisterUserRequest $request, ConstraintViola
 ```
 
 But this not so handy and will break DRY if you just need to return common error response. Thats why
-library provide you `ErrorResponseProvider` interface. You can impllement it in you request object and move this
+library provides you `ErrorResponseProvider` interface. You can implement it in your request object and move this
 code to `getErrorResponse` method:
 
 ```php
@@ -178,9 +178,9 @@ public function getErrorResponse(ConstraintViolationListInterface $errors)
 
 ## More examples
 
-If you still not sure is it useful for you, please see `examples` directory for more use cases.
+If you're still not sure is it useful for you, please see `examples` directory for more use cases.
 Didn't find your case? Then share your use case in issues!
 
 ## Contribution
 
-Fill free to give feedback and feature requests or post issues. PR's are welcomed!
+Feel free to give feedback and feature requests or post issues. PR's are welcomed!
