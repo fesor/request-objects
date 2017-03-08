@@ -16,7 +16,7 @@ Symfony Forms component is a very powerful tool for handling forms. But nowadays
 Complex forms are handled mostly on the client side. As for simple forms `symfony/forms` has very large overhead.
 
 And in some cases you just don't have forms. For example, if you are developing an HTTP API, you probably just
-need to interact with request payload. So why not just wrap request payload to some user defined object and
+need to interact with request payload. So why not just wrap request payload in some user defined object and
 validate just it? This also encourages separation of concerns and will help you in case of API versioning.
 
 ## Usage
@@ -27,7 +27,7 @@ First of all, we need to install this package via composer:
 composer require fesor/request-objects
 ```
 
-And register bundle:
+And register the bundle:
 
 ```
     public function registerBundles()
@@ -39,8 +39,8 @@ And register bundle:
     }
 ```
 
-Bundle doesn't require any additional configurations, but you could also specify error response
-provider service in bundle config. We will back to this in "Handle validation errors" section.
+Bundle doesn't require any additional configuration, but you could also specify an error response
+provider service in bundle config. We will come back to this in "Handle validation errors" section.
 
 ### Define your request objects
 
@@ -48,7 +48,8 @@ All user defined requests should extend `Fesor\RequestObject\RequestObject`. Let
 request object for user registration action:
 
 ```php
-use Fesor\RequestObject\Request;
+use Fesor\RequestObject\RequestObject;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class RegisterUserRequest extends RequestObject
 {
@@ -73,8 +74,8 @@ public function registerUserAction(RegisterUserRequest $request)
 }
 ```
 
-This bundle will bind validated request object to argument `$request`. Request object has very simple interface
- for data interaction. It is very similar to Symfony's request object but is considered immutable by default (but you
+This bundle will bind validated request object to the `$request` argument. Request object has very simple interface
+ for data interaction. It is very similar to Symfony's request object but is considered immutable by default (although you
  can add some setters if you wish so)
 
 ```php
@@ -89,10 +90,10 @@ $request->all();
 
 This library has default implementation of `PayloadResolver` interface, which acts this way:
 
-1) If request can have body (i.e. it is POST, PUT, PATCH or whatever request with body)
+1) If a request can have a body (i.e. it is POST, PUT, PATCH or whatever request with body)
 it uses union of `$request->request->all()` and `$request->files->all()` arrays as payload.
 
-2) If request can't have body (i.e. GET, HEAD verbs) then it uses `$request->query->all()`.
+2) If request can't have a body (i.e. GET, HEAD verbs), then it uses `$request->query->all()`.
 
 If you wish to apply custom logic for payload extraction, you could implement `PayloadResolver` interface within
 your request object:
@@ -118,7 +119,7 @@ This will allow you to do some crazy stuff with your requests and DRY a lot of s
 
 ### Validating payload
 
-As you can see from previous example, method `rules` should return validation rules for [symfony validator](http://symfony.com/doc/current/book/validation.html).
+As you can see from previous example, the `rules` method should return validation rules for [symfony validator](http://symfony.com/doc/current/book/validation.html).
 Your request payload will be validated against it and you will get valid data in your action.
 
 If you have some validation rules which depend on payload data, then you can handle it via validation groups.
@@ -137,9 +138,9 @@ public function validationGroup(array $payload)
 }
 ```
 
-### Handle validation errors
+### Handling validation errors
 
-If validated data is invalid, library will throw exception which wil contain validation errors and request object.
+If validated data is invalid, library will throw exception which will contain validation errors and request object.
 
 But if you don't want to handle it via `kernel.exception` listener, you have several options.
 
@@ -178,7 +179,7 @@ public function getErrorResponse(ConstraintViolationListInterface $errors)
 
 ## More examples
 
-If you're still not sure is it useful for you, please see `examples` directory for more use cases.
+If you're still not sure is it useful for you, please see the `examples` directory for more use cases.
 Didn't find your case? Then share your use case in issues!
 
 ## Contribution
