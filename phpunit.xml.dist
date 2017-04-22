@@ -24,8 +24,13 @@
     strict="false"
     verbose="false">
     <testsuites>
-        <testsuite name="Default test suite">
-            <directory>tests</directory>
+        <testsuite name="unit">
+            <directory>./Tests/</directory>
+            <exclude>./Tests/Fixtures/</exclude>
+            <exclude>./Tests/Functional/</exclude>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>./Tests/Functional/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
