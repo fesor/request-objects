@@ -6,9 +6,9 @@ use Fesor\RequestObject\Bundle\RequestObjectEventListener;
 use Fesor\RequestObject\HttpPayloadResolver;
 use Fesor\RequestObject\PayloadResolver;
 use Fesor\RequestObject\RequestObjectBinder;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -27,9 +27,11 @@ class RequestObjectExtension extends Extension
         $definition->setAbstract(true);
         $container->setDefinition('request_object.payload_resolver', $definition);
 
-        $implDefinition = new DefinitionDecorator('request_object.payload_resolver');
+        $implDefinition = new ChildDefinition('request_object.payload_resolver');
         $implDefinition->setClass(HttpPayloadResolver::class);
         $container->setDefinition('request_object.payload_resolver.http', $implDefinition);
+
+        $container->setAlias(PayloadResolver::class, 'request_object.payload_resolver.http');
     }
 
     private function registerRequestBinder(ContainerBuilder $container)

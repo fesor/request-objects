@@ -73,7 +73,7 @@ class RequestObjectBinder
         $requestObject->setPayload($payload);
         if (array_key_exists('errors', $matchedArguments)) {
             $request->attributes->set($matchedArguments['errors']->name, $errors);
-        } elseif (0 !== count($errors)) {
+        } elseif ($errors && 0 !== $errors->count()) {
             return $this->providerErrorResponse($requestObject, $errors);
         }
     }
