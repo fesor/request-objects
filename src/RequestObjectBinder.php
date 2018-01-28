@@ -109,8 +109,12 @@ class RequestObjectBinder
         if (is_array($action)) {
             $classReflection = new \ReflectionClass($action[0]);
             $actionReflection = $classReflection->getMethod($action[1]);
-        } else {
+        } elseif ($action instanceof \Closure || is_string($action)) {
             $actionReflection = new \ReflectionFunction($action);
+        }
+        else {
+            $classReflection = new \ReflectionClass($action);
+            $actionReflection = $classReflection->getMethod('__invoke');
         }
 
         $matchedArguments = [];

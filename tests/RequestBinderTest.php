@@ -53,6 +53,19 @@ class RequestBinderTest extends PHPUnit_Framework_TestCase
         self::assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
     }
 
+    public function testRequestObjectBindingOnInvokableObject()
+    {
+        $action = new class() {
+            public function __invoke(RegisterUserRequest $requestObj)
+            {
+            }
+        };
+
+        (new RequestObjectBinder($this->payloadResolver, $this->validator))->bind($this->request, $action);
+        self::assertTrue($this->request->attributes->has('requestObj'));
+        self::assertInstanceOf(RequestObject\RequestObject::class, $this->request->attributes->get('requestObj'));
+    }
+
     public function testPassErrorsToAction()
     {
         $this->validRequest();
