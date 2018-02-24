@@ -1,25 +1,28 @@
 <?php
 
+namespace Tests\Fesor\RequestObject;
+
 use Fesor\RequestObject;
 use Fesor\RequestObject\Examples\Request\CustomizedPayloadRequest;
 use Fesor\RequestObject\Examples\Request\RegisterUserRequest;
 use Fesor\RequestObject\Examples\Request\ResponseProvidingRequest;
 use Fesor\RequestObject\RequestObjectBinder;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class RequestBinderTest extends PHPUnit_Framework_TestCase
+class RequestBinderTest extends TestCase
 {
     /** @var  Request */
     private $request;
 
-    /** @var  RequestObject\PayloadResolver|PHPUnit_Framework_MockObject_MockObject */
+    /** @var  RequestObject\PayloadResolver */
     private $payloadResolver;
 
-    /** @var  ValidatorInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var  ValidatorInterface */
     private $validator;
 
     public function setUp()

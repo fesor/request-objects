@@ -16,18 +16,19 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Fesor\\RequestObject\\Examples\\": "examples/"
+            "Fesor\\RequestObject\\Examples\\": "examples/",
+            "Tests\\Fesor\\RequestObject\\": "tests/"
         }
     },
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1.0",
-        "symfony/http-foundation": "^3.3|^4.0",
+        "symfony/framework-bundle": "^3.3|^4.0",
         "symfony/validator": "^3.3|^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.3",
-        "symfony/framework-bundle": "^3.3|^4.0",
-        "symfony/var-dumper": "^4.0"
+        "symfony/var-dumper": "^4.0",
+        "phpunit/phpunit": "~7.0",
+        "symfony/yaml": "^4.0"
     }
 }

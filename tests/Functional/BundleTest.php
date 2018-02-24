@@ -1,10 +1,13 @@
 <?php
 
+namespace Tests\Fesor\RequestObject\Functional;
+
 use Fesor\RequestObject\Examples\App;
 use Fesor\RequestObject\InvalidRequestPayloadException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class BundleTest extends PHPUnit_Framework_TestCase
+class BundleTest extends TestCase
 {
     /**
      * @var App\AppKernel
