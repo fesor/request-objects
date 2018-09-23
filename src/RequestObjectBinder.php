@@ -64,6 +64,15 @@ class RequestObjectBinder
 
         $payload = $this->resolvePayload($requestObject, $request);
 
+        $reflectionClass = new \ReflectionClass($requestObject);
+        foreach($payload as $key => $item) {
+            if ($reflectionClass->hasProperty($key) === true) {
+                $property = $reflectionClass->getProperty($key);
+                $property->setAccessible(true);
+                $property->setValue($requestObject, $item);
+            }
+        }
+
         $errors = $this->validator->validate(
             $payload,
             $requestObject->rules(),
